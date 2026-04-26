@@ -14,7 +14,7 @@ class Config:
     label_map = {'HECT': 1, 'RING': 0, 'UBOX': 0, 'RANDOM': 0}
     num_classes = 2
 
-    # 模型超参数（必须与训练时一致）
+    # 模型超参数
     embedding_dim = 130
     num_filters = 16
     kernel_size = 5
