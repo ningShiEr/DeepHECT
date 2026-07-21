@@ -28,7 +28,7 @@ class ProteinDataset(Dataset):
         self.data = []
         for label, seq in read_fasta(fasta_path):
             if label not in Config.label_map:
-                raise ValueError(f"未知标签 '{label}' 在文件 {fasta_path}")
+                raise ValueError(f"Unknown label '{label}' in file {fasta_path}")
             label_idx = Config.label_map[label]
             seq_indices = [Config.AA_dict.get(aa, Config.AA_dict['X']) for aa in seq]
             self.data.append((torch.tensor(seq_indices, dtype=torch.long), label_idx))
@@ -47,7 +47,7 @@ def collate_fn(batch):
     return padded_seqs, lengths, labels
 
 def get_loader(fasta_path, shuffle=False):
-    """数据加载接口（供 main.py 调用）"""
+    """Create a PyTorch DataLoader for a FASTA dataset."""
     dataset = ProteinDataset(fasta_path)
     loader = DataLoader(
         dataset,
