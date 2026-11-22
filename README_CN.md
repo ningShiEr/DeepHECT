@@ -1,3 +1,49 @@
 # DeepHECT
 
-This repository is maintained in English for peer review and publication. Please see `README.md` for the project description, dataset information, code information, usage instructions, requirements, methodology, citation information, and license notes.
+DeepHECT是一个基于蛋白质序列识别HECT家族E3泛素连接酶的轻量级分类模型。本仓库对应论文使用的最终模型：采用独立PAD标记、100维氨基酸嵌入、大小为7的一维卷积核，以及带注意力机制的双层BiLSTM。
+
+## 最终模型与评估结果
+
+- 词表：PAD索引为0；20种标准氨基酸和未知残基`X`使用索引1–21，词表大小为22。
+- 架构：100维嵌入；16个卷积滤波器、卷积核大小7；双层BiLSTM，每个方向64个隐藏单元；带mask的注意力。
+- 独立测试集：769条序列（85条HECT、684条非HECT）。准确率0.9961、精确率0.9767、召回率0.9882、F1值0.9825、MCC 0.9803、AUROC 0.9999、AUPRC 0.9995。
+- 训练集五折交叉验证：准确率0.9981 ± 0.0010、精确率0.9951 ± 0.0036、召回率0.9951 ± 0.0017、F1值0.9951 ± 0.0025、MCC 0.9901 ± 0.0049。以上为训练集内部交叉验证结果，不是独立测试集结果。
+- 最终检查点包含163,755个参数。
+
+## 文件说明
+
+- `config.py`、`data.py`、`models.py`、`trainer.py`、`kfold.py`、`utils.py`、`visualize.py`、`main.py`：模型、数据、训练、评估和可视化代码。
+- `data/`：训练集、验证集和独立测试集FASTA文件。标签写在FASTA标题中：`HECT`、`RING`、`UBOX`或`RANDOM`。
+- `model/DeepHECT/best_model.pth`：最终100×7模型检查点。
+- `model/best_model.pth`：与最终检查点相同的兼容副本，保留旧版脚本使用的路径。
+- `results/`：独立测试集指标、训练历史和五折验证结果。
+
+## 运行方法
+
+安装依赖：
+
+```bash
+pip install -r requirements.txt
+```
+
+在仓库根目录运行：
+
+```bash
+python main.py
+```
+
+选择`2`使用已提供的检查点进行测试；选择`1`从头训练并在测试集评估；选择`3`运行五折交叉验证；选择`4`生成t-SNE可视化。代码使用相对于仓库的路径，不需要修改本机路径。可使用CUDA GPU加速，CPU也可完成推理。
+
+## 数据划分
+
+数据集共7704条聚类序列：训练集6164条、验证集771条、独立测试集769条。各类别具体数量见论文及补充材料。独立测试集仅用于最终评估，没有用于选择100×7超参数。
+
+## 引用
+
+请引用相关论文：
+
+> DeepHECT: A Lightweight Deep Learning Model for Sequence-Based Identification of HECT Family E3 Ligases.
+
+## 使用说明
+
+本仓库供学术评审和研究使用。如需将代码或数据用于其他目的或重新分发，请先联系作者。
