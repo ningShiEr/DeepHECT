@@ -1,0 +1,6 @@
+__pycache__/
+*.py[cod]
+*.log
+model/DeepHECT/training_curves.png
+model/DeepHECT/test_results_latest.json
+model/DeepHECT/test_roc_data.npz
